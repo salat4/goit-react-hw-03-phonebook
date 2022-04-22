@@ -1,21 +1,40 @@
 import { Component } from "react";
-import { nanoid } from "nanoid";
 import ContactForm from "./ContactForm/ContactForm";
 import ContactList from "./ContactList/ContactList";
 import Filter from "./Filter/Filter";
 import Notiflix from "notiflix";
+import { v4 as uuidv4 } from "uuid";
+const LS_KEY = "reader_contact";
 export class App extends Component {
-  loginInputId = nanoid();
-
   state = {
-    contacts: [
-      { id: "id-1", name: "Rosie Simpson", number: "459-12-56" },
-      { id: "id-2", name: "Hermione Kline", number: "443-89-12" },
-      { id: "id-3", name: "Eden Clements", number: "645-17-79" },
-      { id: "id-4", name: "Annie Copeland", number: "227-91-26" },
-    ],
+    contacts: [],
     filter: "",
   };
+
+  componentDidMount() {
+    const cont = this.state.contacts;
+    const index = localStorage.getItem(LS_KEY);
+    if (index !== null) {
+      JSON.parse(index).map((contact) =>
+        cont.push({
+          id: uuidv4(),
+          name: contact.name,
+          number: contact.number,
+        })
+      );
+
+      this.setState({ contacts: cont });
+    }
+  }
+
+  componentDidUpdate(_, prevState) {
+    console.log("next", prevState.name);
+    //console.log("current", this.state.contacts);
+    console.log(this.state.name);
+    if (this.state.name !== prevState.name) {
+      localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
+    }
+  }
   handelChangeName = (e) => {
     this.setState({
       name: e.target.value,
@@ -39,7 +58,7 @@ export class App extends Component {
       }
     }
     cont.push({
-      id: this.loginInputId,
+      id: uuidv4(),
       name: this.state.name,
       number: this.state.number,
     });
@@ -58,9 +77,6 @@ export class App extends Component {
     return name.toLowerCase().indexOf(this.state.filter.toLowerCase()) !== -1;
   };
   deleteContacts = (e) => {
-    // console.log(cont);
-    // console.log(index);
-    console.log(e.target.id);
     let deleteCont = [...this.state.contacts];
 
     for (let i = 0; i < this.state.contacts.length; i++) {

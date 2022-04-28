@@ -28,9 +28,6 @@ export class App extends Component {
   }
 
   componentDidUpdate(_, prevState) {
-    console.log("next", prevState.name);
-    //console.log("current", this.state.contacts);
-    console.log(this.state.name);
     if (this.state.name !== prevState.name) {
       localStorage.setItem(LS_KEY, JSON.stringify(this.state.contacts));
     }
@@ -49,7 +46,7 @@ export class App extends Component {
     const name = this.state.name;
     const number = this.state.number;
     let cont = this.state.contacts;
-    if (name === undefined || number === undefined) {
+    if (name === undefined || number === undefined || name === "" || number === "") {
       return Notiflix.Notify.warning("Write name or number");
     }
     for (let i = 0; i < cont.length; i++) {
@@ -62,7 +59,7 @@ export class App extends Component {
       name: this.state.name,
       number: this.state.number,
     });
-    return this.setState({
+    this.setState({
       contacts: cont,
       name: "",
       number: "",
@@ -95,9 +92,10 @@ export class App extends Component {
         <ContactForm
           handelChangeName={this.handelChangeName}
           handelChangeTel={this.handelChangeTel}
-          name={contacts}
-          tel={contacts}
+        //  contacts={contacts}
           saveChange={this.saveChange}
+          name={this.state.name}
+          tel = {this.state.number}
         />
 
         <h2>Contacts</h2>

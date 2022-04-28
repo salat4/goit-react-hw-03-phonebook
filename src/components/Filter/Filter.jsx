@@ -1,3 +1,4 @@
+import PropTypes from "prop-types"
 const Filter = ({ handelFilter, filter }) => (
   <div>
     {/* <p>Find contacts by name</p> */}
@@ -9,4 +10,8 @@ const Filter = ({ handelFilter, filter }) => (
     ></input>
   </div>
 );
+Filter.propTypes = {
+  filter: PropTypes.string,
+  handelFilter: PropTypes.func,
+};
 export default Filter;
